@@ -1,14 +1,27 @@
-//  __    __   ______    ______  
-//  |  \  |  \ /      \  /      \ 
-//  | $$\ | $$|  $$$$$$\|  $$$$$$\
-//  | $$$\| $$| $$__| $$| $$___\$$
-//  | $$$$\ $$| $$    $$ \$$    \ 
-//  | $$\$$ $$| $$$$$$$$ _\$$$$$$\
-//  | $$ \$$$$| $$  | $$|  \__| $$
-//  | $$  \$$$| $$  | $$ \$$    $$
-//   \$$   \$$ \$$   \$$  \$$$$$$ 
+//     ___           ___           ___           ___                    ___           ___
+//     /  /\         /  /\         /__/\         /  /\                  /  /\         /  /\
+//    /  /:/_       /  /::\       |  |::\       /  /:/_                /  /::\       /  /:/_
+//   /  /:/ /\     /  /:/\:\      |  |:|:\     /  /:/ /\              /  /:/\:\     /  /:/ /\
+//  /  /:/_/::\   /  /:/~/::\   __|__|:|\:\   /  /:/ /:/_            /  /:/  \:\   /  /:/ /:/
+// /__/:/__\/\:\ /__/:/ /:/\:\ /__/::::| \:\ /__/:/ /:/ /\          /__/:/ \__\:\ /__/:/ /:/
+// \  \:\ /~~/:/ \  \:\/:/__\/ \  \:\~~\__\/ \  \:\/:/ /:/          \  \:\ /  /:/ \  \:\/:/
+//  \  \:\  /:/   \  \::/       \  \:\        \  \::/ /:/            \  \:\  /:/   \  \::/
+//   \  \:\/:/     \  \:\        \  \:\        \  \:\/:/              \  \:\/:/     \  \:\
+//    \  \::/       \  \:\        \  \:\        \  \::/                \  \::/       \  \:\
+//     \__\/         \__\/         \__\/         \__\/                  \__\/         \__\/
+//   ___           ___           ___           ___
+//   _____                       /  /\         /  /\         /__/|         /  /\
+//  /  /::\                     /  /::\       /  /:/        |  |:|        /  /:/_
+// /  /:/\:\    ___     ___    /  /:/\:\     /  /:/         |  |:|       /  /:/ /\
+// /  /:/~/::\  /__/\   /  /\  /  /:/  \:\   /  /:/  ___   __|  |:|      /  /:/ /::\
+// /__/:/ /:/\:| \  \:\ /  /:/ /__/:/ \__\:\ /__/:/  /  /\ /__/\_|:|____ /__/:/ /:/\:\
+// \  \:\/:/~/:/  \  \:\  /:/  \  \:\ /  /:/ \  \:\ /  /:/ \  \:\/:::::/ \  \:\/:/~/:/
+// \  \::/ /:/    \  \:\/:/    \  \:\  /:/   \  \:\  /:/   \  \::/~~~~   \  \::/ /:/
+// \  \:\/:/      \  \::/      \  \:\/:/     \  \:\/:/     \  \:\        \__\/ /:/
+//  \  \::/        \__\/        \  \::/       \  \::/       \  \:\         /__/:/
+//   \__\/                       \__\/         \__\/         \__\/         \__\/
 
-const DiceResult = function (data) {
+const DiceResult = function(data) {
   if (data) {
     const item = JSON.parse(data)
     this.sender = item.sender
@@ -22,12 +35,12 @@ const DiceResult = function (data) {
 }
 
 DiceResult.prototype = {
-  toString: function () {
+  toString: function() {
     return JSON.stringify(this)
   }
 }
 
-const Kingdom = function (data) {
+const Kingdom = function(data) {
   if (data) {
     const item = JSON.parse(data)
     this.title = item.title
@@ -49,12 +62,12 @@ const Kingdom = function (data) {
 }
 
 Kingdom.prototype = {
-  toString: function () {
+  toString: function() {
     return JSON.stringify(this)
   }
 }
 
-const Game = function () {
+const Game = function() {
   LocalContractStorage.defineProperty(this, 'kingdomsCount')
   LocalContractStorage.defineProperty(this, 'owner')
   LocalContractStorage.defineProperty(this, 'jackpotBalance')
@@ -65,26 +78,26 @@ const Game = function () {
   LocalContractStorage.defineMapProperty(this, 'scores')
   LocalContractStorage.defineMapProperty(this, 'kingdomsIndexes')
   LocalContractStorage.defineMapProperty(this, 'diceResults', {
-    parse: function (data) {
+    parse: function(data) {
       return new DiceResult(data)
     },
-    stringify: function (item) {
+    stringify: function(item) {
       return item.toString()
     }
   })
 
   LocalContractStorage.defineMapProperty(this, 'kingdoms', {
-    parse: function (data) {
+    parse: function(data) {
       return new Kingdom(data)
     },
-    stringify: function (item) {
+    stringify: function(item) {
       return item.toString()
     }
   })
 }
 
 Game.prototype = {
-  init: function () {
+  init: function() {
     this.owner = Blockchain.transaction.from
     this.jackpotBalance = new BigNumber(0)
     this.kingdomsCount = 0
@@ -92,11 +105,11 @@ Game.prototype = {
     this.round = 1
   },
 
-  getJackpot: function () {
+  getJackpot: function() {
     return this.jackpotBalance
   },
 
-  createKingdom: function (key, type, tier, title, isLocked) {
+  createKingdom: function(key, type, tier, title, isLocked) {
     if (this.gameIsLocked === true) {
       throw new Error('Game is finished')
     }
@@ -138,7 +151,7 @@ Game.prototype = {
     this.kingdoms.put(key, kingdom)
   },
 
-  upgradeKingdom: function (key, tier, locked) {
+  upgradeKingdom: function(key, tier, locked) {
     if (this.gameIsLocked === true) {
       throw new Error('Game is finished')
     }
@@ -174,7 +187,7 @@ Game.prototype = {
     this.kingdoms.set(key, kingdom)
   },
 
-  getDiceResults: function () {
+  getDiceResults: function() {
     const results = []
     const size = parseInt(this.diceResultsCount)
     for (let i = 0; i < size; i++) {
@@ -183,15 +196,15 @@ Game.prototype = {
     return results
   },
 
-  getDiceResult: function (index) {
+  getDiceResult: function(index) {
     return this.diceResults.get(index)
   },
 
-  getDiceResultCount: function () {
+  getDiceResultCount: function() {
     return this.diceResultsCount
   },
 
-  attackKingdom: function (key, title) {
+  attackKingdom: function(key, title) {
     if (this.gameIsLocked === true) {
       throw new Error('Game is finished')
     }
@@ -248,7 +261,7 @@ Game.prototype = {
     }
   },
 
-  _getPoints: function (tier) {
+  _getPoints: function(tier) {
     return [1, 3, 5, 8, 13][tier - 1]
   },
 
@@ -270,7 +283,7 @@ Game.prototype = {
     this.scores.put(addr, previousScore - points)
   },
 
-  finishGame: function () {
+  finishGame: function() {
     if (
       this.owner != Blockchain.transaction.from ||
       this.gameIsLocked === false
@@ -307,7 +320,7 @@ Game.prototype = {
     this.round = this.round + 1
   },
 
-  getAllKingdoms: function () {
+  getAllKingdoms: function() {
     const result = {}
     const size = parseInt(this.kingdomsCount)
     for (let i = 0; i < size; i++) {
@@ -319,15 +332,15 @@ Game.prototype = {
     return result
   },
 
-  getKingdomCount: function () {
+  getKingdomCount: function() {
     return this.kingdomsCount || 0
   },
 
-  getKingdomByKey: function (key) {
+  getKingdomByKey: function(key) {
     return this.kingdoms.get(key)
   },
 
-  getKingdomByIndex: function (index) {
+  getKingdomByIndex: function(index) {
     const kingdomIndex = parseInt(index)
     const kingdomKey = this.kingdomsIndexes.get(kingdomIndex)
     return this.kingdoms.get(kingdomKey)
@@ -335,7 +348,7 @@ Game.prototype = {
 
   // Don't worry. This is just a security function.
   // Developers must secure your funds if something goes wrong.
-  suicide: function () {
+  suicide: function() {
     if (this.owner != Blockchain.transaction.from) {
       throw new Error('You are not authorized')
     }
